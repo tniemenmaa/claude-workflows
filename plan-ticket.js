@@ -1,3 +1,5 @@
+import { loadPrompt } from './lib/prompts.js'
+
 export const meta = {
   name: 'plan-ticket',
   description: 'Fetch GitHub issue and generate a detailed plan via interactive planner agent using EnterPlanMode',
@@ -21,18 +23,7 @@ phase('Plan')
 log(`Planning issue #${issueNum}...`)
 
 const plan = await agent(
-  `You are a planning agent. An issue has been passed to you:
-
-${issueJson}
-
-Your job:
-1. Use EnterPlanMode to create a detailed plan
-2. Clarify any ambiguities in the issue
-3. Challenge assumptions and ask clarifying questions
-4. Document the plan clearly including scope, success criteria, and approach
-5. When done, ExitPlanMode and return the final plan
-
-Be thorough. This plan will guide the developer.`,
+  loadPrompt('planner', { issue: issueJson }),
   {
     label: 'planner',
     phase: 'Plan',
